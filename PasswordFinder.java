@@ -1,51 +1,58 @@
-package day11;
-import java.util.HashMap;
-
+package day1;
+import java.util.Scanner;
 
 public class PasswordFinder {
-	
+	public static boolean isStable(int number) {
+        int[] digitCount = new int[10];
+        
+        while (number > 0) {
+            int digit = number % 10;
+            digitCount[digit]++;
+            number /= 10;
+        }
 
-	    public static int findPassword(int input1, int input2, int input3, int input4, int input5) {
-	        int[] inputs = {input1, input2, input3, input4, input5};
-	        int stableCount = 0;
-	        int unstableCount = 0;
+        int freq = 0;
+        for (int count : digitCount) {
+            if (count != 0) {
+                if (freq == 0) {
+                    freq = count;
+                } else if (freq != count) {
+                    return false;
+                }
+            }
+        }
 
-	        for (int num : inputs) {
-	            if (isStable(num)) {
-	                stableCount++;
-	            } else {
-	                unstableCount++;
-	            }
-	        }
+        return true;
+    }
 
-	        return (unstableCount * 10) + stableCount;
-	    }
+    // Main method
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int[] inputs = new int[5];
+        int password = 0;
 
-	    private static boolean isStable(int number) {
-	        String numStr = Integer.toString(number);
-	        HashMap<Character, Integer> digitCount = new HashMap<>();
+        System.out.println("Enter 5 numbers:");
+        System.out.println("🔍 Detective Buckshee Jr. needs your help!");
+        System.out.println("To unlock the Shantiniketan Games Complex, you must find the correct password.");
+        System.out.println("Enter 5 secret codes (numbers). Some are stable, some are not...");
+        System.out.println("🤫 Only the stable ones matter. The password is the total of all stable codes.");
+        System.out.println("Enter one number at a time, and press Enter after each:");
 
-	        for (char ch : numStr.toCharArray()) {
-	            digitCount.put(ch, digitCount.getOrDefault(ch, 0) + 1);
-	        }
 
-	        int frequency = -1;
-	        for (int count : digitCount.values()) {
-	            if (frequency == -1) {
-	                frequency = count;
-	            } else if (frequency != count) {
-	                return false;
-	            }
-	        }
+        for (int i = 0; i < 5; i++) {
+            System.out.print("Enter number " + (i + 1) + ": ");
+            inputs[i] = scanner.nextInt();
+        }
 
-	        return true;
-	    }
+        for (int num : inputs) {
+            if (isStable(num)) {
+                password += num;
+            }
+            
+        }
 
-	    // For testing
-	    public static void main(String[] args) {
-	        int password = findPassword(12, 1313, 122, 678, 898);
-	        System.out.println("Password: " + password);  // Output should be 23
-	    }
-	}
-	
+        System.out.println("Password (sum of stable numbers): " + password);
+        scanner.close();
+    }
 
+}
